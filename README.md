@@ -102,12 +102,15 @@ int8的量化ncnn和tensorrt的算法原理一致，都是线性对称量化
 
 <font size=5>ncnn int8量化步骤：</font>  
 cd ncnn-20220420/build/tools ./ncnnoptimize best-lite.param best-lite.bin best-lite_fp32.param best-lite_fp32.bin 0   
-准备相关校验（论文说1000+左右数据，从训练集中抽取）  
-校验信息的文件.table，这个里面就是存放着校验集（或者使用整个训练集）上对权重和激活值进行统计的最大值、最小值、均值等信息。
-然后根据这些信息用于确定量化的范围和精度，以便将浮点数映射到整数值。
 **step1**.find images/ -type f > imagelist.txt  可以使用该命令获取相关imagelist  
 **step2**.cd ncnn-20220420/build/tools/quantize  ./ncnn2table best-lite_fp32.param best-lite_fp32.bin  /src/notebooks/IDimg/imagelist.txt  best-lite-mtz.table mean=[0,0,0] norm=[1/255.0,0.0039215,0.0039215] shape=[640,640,3],pixel=BGR thread=8 method=aciq  
-<font color="#DC143C">**在制作int8table时注意 归一化的系数要和训练保持一致，shape保持一致，method提供的是量化的方法常用的是kl和aciq**</font>  
+<font color="#DC143C">**在制作int8table时注意 归一化的系数要和训练保持一致，shape保持一致，method提供的是量化的方法常用的是kl和aciq**</font>
+
+<font color= "red" > 准备相关校验（论文说1000+左右数据，从训练集中抽取,当然肯定是越多越好）  
+制作的校验信息的文件.table，这个里面就是存放着校验集（或者使用整个训练集）上对权重和激活值进行统计的最大值、最小值、均值等信息。
+然后根据这些信息用于确定量化的范围和精度，以便将浮点数映射到整数值。
+</font>
+
 *********************************************
 <font color="#DC143C">Remind:yolov5的focus层使用kl量化方法时精度损失较为严重，所以对于yolo采用aciq量化算法</font>  
 **step3**.再使用 ./ncnn2int8 best-lite_fp32.param best-lite_fp32.bin best-lite_int8.param best-lite_int8.bin best-lite-mtz.table
