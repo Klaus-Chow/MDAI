@@ -88,6 +88,7 @@ cd ncnn-20220420/build/tools/onnx ./onnx2ncnn best-lite.onnx best-lite.param bes
 **********************
 <font color="#DC143C">使用./ncnnoptimize优化网络结构，合并网络的层，减少cudnn调用相关算子API的次数，从而加速模型的推理</font>,举例：  
 这里的0表示的就是不使用其他精度量化即保持fp32，下面的65536表示的是2^16 = 65536，所以是2的十六进制的数。
+
 ncnn fp32 加速优化 cd ncnn-20220420/build/tools ./ncnnoptimize best-lite.param best-lite.bin best-lite_fp32.param best-lite_fp32.bin 0  
 ncnn fp16量化 cd ncnn-20220420/build/tools ./ncnnoptimize best-lite.param best-lite.bin best-lite_fp16.param best-lite_fp16.bin 65536
 **********************
